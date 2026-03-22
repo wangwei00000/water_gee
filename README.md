@@ -2,7 +2,28 @@ English [中文版](README_zh.md)
 # Water_gee v1.0
 <img src="https://github.com/CaryLee17/water_gee/blob/main/images/figure.png" style="width:1000px">
 
-`Water_gee` repository stores a water extraction methods based on deep learning methods and `GEE` with Python language. The functions that can be achieved by `Water_gee` are mainly tile images acquisition, water body label acquisition, water body label noise correction, model training, and water body prediction using `GEE`. `Water_gee`
+`Water_gee` is a Python-based toolkit that combines deep learning with Google Earth Engine (`GEE`) for automated large-area water body extraction from remote sensing imagery. `Water_gee` implements a complete end-to-end pipeline covering tile image acquisition from `GEE`, water body label generation and noise correction via a self-supervised `Pixel-based CNN`, model training on local hardware, and cloud deployment back to `GEE` for large-scale water body prediction. The key innovation is a model conversion framework that maps CNN layers (Conv2D, Concatenate, Slice) directly to native `GEE` API modules (`ee.Kernel.convolve`, `ee.Image.cat`, `ee.Image.select`), enabling deep learning inference entirely within the `GEE` cloud platform without any external compute resources.
+
+## Core Workflow
+
+```
+ GEE (download)
+       │
+       ▼
+ get_images.ipynb  ──►  Tile images + Water body labels (noise corrected via self-supervised CNN)
+                                              │
+                                              ▼
+                         train_cnn.ipynb  ──►  Trained Pixel-based CNN model
+                                              │
+                                              ▼
+                        gee_predict.ipynb  ──►  Convert CNN weights to GEE API format
+                                              │
+                                              ▼
+                                      Deploy to GEE cloud
+                                              │
+                                              ▼
+                                  Water body extraction results
+```
 
 ## Main Purpose
 
