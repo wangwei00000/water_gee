@@ -2,7 +2,28 @@
 # Water_gee v1.0
 <img src="https://github.com/CaryLee17/water_gee/blob/main/images/figure.png" style="width:1000px">
 
-`Water_gee`存储库存储了基于Python端实现的深度学习结合`GEE`实现的水体提取方法。`Water_gee`可实现的功能主要有瓦片影像、水体标签获取、水体标签噪声纠正、模型训练以及GEE水体预测等。`Water_gee`
+`Water_gee`是一个基于Python的工具包，结合深度学习与谷歌地球引擎（`GEE`）实现大范围遥感影像水体自动化提取。`Water_gee`实现了完整的端到端流程，包括：从`GEE`获取瓦片影像、通过自监督`Pixel-based CNN`生成并纠正水体标签、在本地进行模型训练，以及将模型权重转换后部署回`GEE`云端实现大规模水体预测。核心创新在于模型转换框架，可将CNN网络层（Conv2D、Concatenate、Slice）直接映射到`GEE`原生API模块（`ee.Kernel.convolve`、`ee.Image.cat`、`ee.Image.select`），使深度学习推理完全在`GEE`云平台上完成，无需额外的计算资源。
+
+## 核心流程
+
+```
+ GEE（下载）
+       │
+       ▼
+ get_images.ipynb  ──►  瓦片影像 + 水体标签（经自监督CNN噪声纠正）
+                                              │
+                                              ▼
+                         train_cnn.ipynb  ──►  训练好的Pixel-based CNN模型
+                                              │
+                                              ▼
+                        gee_predict.ipynb  ──►  将CNN权重转换为GEE API格式
+                                              │
+                                              ▼
+                                      部署至GEE云端
+                                              │
+                                              ▼
+                                    水体提取结果
+```
 
 ## 主要解决问题
 
